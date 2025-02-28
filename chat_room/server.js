@@ -16,3 +16,22 @@ const PORT = 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+const mysql = require('mysql2');
+
+const db = mysql.createConnection({
+    host: 'chatroomdatabase.cxaw4yoqi11r.us-east-2.rds.amazonaws.com',
+    user: 'admin',
+    password: 'XrPzMsJyLral85ThImSx',
+    database: 'chatroomdatabase'
+});
+
+// Connect to the database
+db.connect(err => {
+    if (err) {
+        console.error('Database connection failed:', err.stack);
+        return;
+    }
+    console.log('Connected to MySQL RDS.');
+});
+
