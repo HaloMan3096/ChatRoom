@@ -3,12 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <!-- My css -->
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
 
-<header></header>
-<main></main>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">Home</a>
+    </nav>
+</header>
+
+<main>
+    <section class="container message-container">
+       <section class="message-area overflow-auto">
+           <div class="message-container">
+               <img class="avatar" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
+               <span class="time-right">Sender Name - Time Stamp</span>
+               <span class="bubble6 time-left msg-left">Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I'm in a transitional period so I don't wanna kill you, I wanna help you. But I can't give you this case, it don't belong to me. Besides, I've already been through too much shit this morning over this case to hand it over to your dumb ass.</span>
+           </div>
+           <div class="message-container darker">
+               <img class="avatar right" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
+               <span class="time-left">Sender Name - Time Stamp</span>
+               <span class="bubble6 time-left msg-right">Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I'm in a transitional period so I don't wanna kill you, I wanna help you. But I can't give you this case, it don't belong to me. Besides, I've already been through too much shit this morning over this case to hand it over to your dumb ass.</span>
+           </div>
+       </section>
+        <section class="input-group">
+            <input type="text" class="form-control" placeholder="Message" aria-label="Type Message" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button">&#8618;</button>
+            </div>
+        </section>
+    </section>
+</main>
+
 <footer></footer>
 
+<script src="./js/chatroom.js"></script>
+<!-- Bootstrap js -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,0 +1,94 @@
+:root {
+    --gainsboro: rgb(220, 220, 221);
+    --tawny-port: rgb(97, 36, 60);
+    --tawny-port-light: rgba(97, 36, 60, 0.2);
+    --camelot: rgb(151, 53, 76);
+    --camelot-light: rgba(151, 53, 76, 0.4);
+    --fuzzy-wuzzy-brown: rgb(199, 81, 72);
+    --fuzzy-wuzzy-brown-light: rgba(199, 81, 72, 0.3);
+    --porsche: rgb(235, 159, 89);
+    --text-color: slategrey;
+}
+
+body {
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.message-container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.message-area{
+    height: 80vh;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.msg{
+    margin: 0 10px;
+}
+
+.darker {
+    border-color: #ccc;
+    background-color: var(--fuzzy-wuzzy-brown-light);
+}
+
+.message-container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.message-container img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.message-container img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+}
+
+.msg-right{
+    float: right !important;
+    margin-left: 20px;
+    margin-right:0;
+    text-align: right;
+}
+
+.msg-left {
+    float: left !important;
+    margin-right:0;
+}
+
+.time-right {
+    font-size: 14px;
+    float: right;
+    color: #aaa;
+
+}
+
+.time-left {
+    font-size: 14px;
+    float: left;
+    color: #999;
+}
+
+.bubble6 {
+    max-width: 750px;
+    height: 80px;
+    background: #efefef;
+    border: 1px solid #a7a7a7;
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, .2);
+    padding: 15px;
+}
