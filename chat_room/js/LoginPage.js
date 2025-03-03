@@ -16,7 +16,7 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         console.log('Server Response:', data);
 
         if (response.ok) {
-            window.location.href = '../index.html';
+            //window.location.href = '../index.html';
         } else {
             alert(data.message || 'Login failed');
         }
