@@ -1,5 +1,6 @@
-let currentUsername = '';
 import {openChat} from "./index";
+
+let currentUsername = '';
 
 export async function loadUserChats() {
     try {
