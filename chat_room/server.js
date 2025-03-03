@@ -213,6 +213,30 @@ app.get('/get-user-conversations', async (req, res) => {
     }
 });
 
+app.get('/get-user-chats', async (req, res) => {
+    const userId = req.cookies.userId;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    try {
+        // Get all chat IDs where the user is involved
+        const [chats] = await db.promise().query(`
+            SELECT DISTINCT c.cid
+            FROM Chat c
+            INNER JOIN Chats ch ON c.cid = ch.cid
+            WHERE ch.uid = ?
+            ORDER BY MAX(ch.created_at) DESC;
+        `, [userId]);
+
+        res.status(200).json(chats);
+
+    } catch (error) {
+        console.error("Error fetching user chats:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 app.use(cors({
     origin: 'http://localhost:3000',

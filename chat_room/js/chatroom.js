@@ -1,5 +1,33 @@
 let currentUsername = '';
 
+async function loadUserChats() {
+    try {
+        const response = await fetch('/get-user-chats', { credentials: 'include' });
+        if (!response.ok) throw new Error('Failed to fetch chats');
+
+        const chats = await response.json();
+        const chatsContainer = document.querySelector('.list-group.chats');
+
+        chatsContainer.innerHTML = ''; // Clear existing chats
+
+        if (chats.length === 0) {
+            chatsContainer.innerHTML = '<li class="list-group-item">No chats found.</li>';
+            return;
+        }
+
+        chats.forEach(chat => {
+            const chatElement = document.createElement('li');
+            chatElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center', 'chat');
+
+            chatElement.innerHTML = `<a href="#" onclick="openChat(${chat.cid})">Chat ${chat.cid}</a>`;
+
+            chatsContainer.appendChild(chatElement);
+        });
+
+    } catch (error) {
+        console.error('Error loading chats:', error);
+    }
+}
 
 async function getCurrentUser() {
     try {
@@ -89,3 +117,5 @@ document.getElementById('sendMessageBtn').addEventListener('click', async () => 
 
 // Load the user's chat when the page loads
 loadChat();
+
+document.addEventListener('DOMContentLoaded', loadUserChats);

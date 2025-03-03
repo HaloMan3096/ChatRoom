@@ -13,14 +13,41 @@
 body {
     margin: 0 auto;
     padding: 0 20px;
+    background-color: #e2e3e5 !important;
+}
+
+.content{
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.chats-container{
+    background-color: #a7a7a7;
+    padding-top: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin: 10px 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-left: 1px solid var(--tawny-port-light);
+    border-bottom: 1px solid var(--tawny-port-light);
+    border-top: 1px solid var(--tawny-port-light);
+}
+
+.chat{
+    margin: 2px auto;
 }
 
 .message-container {
     border: 2px solid #dedede;
     background-color: #f1f1f1;
-    border-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
     padding: 10px;
     margin: 10px 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-right: 1px solid var(--tawny-port-light);
+    border-bottom: 1px solid var(--tawny-port-light);
+    border-top: 1px solid var(--tawny-port-light);
 }
 
 .message-area{
@@ -92,7 +119,6 @@ body {
     box-shadow: 4px 4px 0 rgba(0, 0, 0, .2);
     padding: 15px;
 }
-
 
 /* Login/Create account pages */
 
