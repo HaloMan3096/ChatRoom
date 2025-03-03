@@ -100,6 +100,7 @@ app.post('/login', async (req, res) => {
 
             res.status(200).json({ message: 'Login successful', user });
             res.cookie('userId', user.id, { httpOnly: true, sameSite: 'Lax' });
+            res.redirect('/index.html');
         });
 
     } catch (error) {
