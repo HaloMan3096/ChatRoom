@@ -96,7 +96,7 @@ app.post('/login', async (req, res) => {
                 return res.status(400).json({ message: "Invalid email or password" });
             }
 
-            res.cookie('userId', user.id, { httpOnly: true, sameSite: 'Lax' });
+            res.cookie('userId', 1, { httpOnly: true, sameSite: 'Lax' });
 
             res.status(200).json({ message: 'Login successful', user });
         });
