@@ -6,7 +6,7 @@ async function loadChat() {
     });
 
     if (!response.ok) {
-        window.location.href = '/login';  // Redirect to login if user is not authenticated
+        window.location.href = '../html/SignIn.html';  // Redirect to login if user is not authenticated
         return;
     }
 
