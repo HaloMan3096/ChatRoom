@@ -1,6 +1,6 @@
 let currentUsername = '';
 
-export function openChat(chatId) {
+function openChat(chatId) {
     console.log("Going to chat #" + chatId);
     window.location.href = `chat.html?cid=${chatId}`;
 }
@@ -104,21 +104,24 @@ function displayMessages(conversation) {
 }
 
 // Send a new message
-document.getElementById('sendMessageBtn').addEventListener('click', async () => {
-    const messageText = document.getElementById('messageInput').value;
-    const response = await fetch('/send-message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: messageText })
-    });
+let submitButton = document.getElementById('sendMessageBtn');
+if (submitButton) {
+    submitButton.addEventListener('click', async () => {
+        const messageText = document.getElementById('messageInput').value;
+        const response = await fetch('/send-message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: messageText })
+        });
 
-    if (response.ok) {
-        loadChat();  // Reload the conversation to include the new message
-        document.getElementById('messageInput').value = '';  // Clear the input field
-    } else {
-        alert("Failed to send message.");
-    }
-});
+        if (response.ok) {
+            loadChat();  // Reload the conversation to include the new message
+            document.getElementById('messageInput').value = '';  // Clear the input field
+        } else {
+            alert("Failed to send message.");
+        }
+    });
+}
 
 // Load the user's chat when the page loads
 loadChat();
