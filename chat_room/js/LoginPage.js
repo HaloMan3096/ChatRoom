@@ -8,16 +8,16 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password }),
+            credentials: 'include'  // Important to send cookies!
         });
 
         const data = await response.json();
-        if (response.ok) {
-            // Set the cookie manually without HttpOnly (server should set HttpOnly cookie)
-            document.cookie = `authToken=${data.token}; path=/; Secure`;
+        console.log('Server Response:', data);
 
+        if (response.ok) {
             alert("Login successful!");
-            window.location.href = '../index.html';  // Redirect to chat page
+            window.location.href = '../index.html';
         } else {
             alert(data.message || 'Login failed');
         }
