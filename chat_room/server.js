@@ -201,6 +201,8 @@ app.get('/get-user-conversations', async (req, res) => {
 });
 
 app.use(cors({
-    origin: 'http://localhost:3000',  // Frontend URL (adjust as needed)
-    credentials: true  // Allow cookies to be sent
+    origin: 'http://localhost:3000',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'OPTIONS']
 }));

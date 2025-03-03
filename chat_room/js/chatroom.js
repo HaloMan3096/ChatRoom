@@ -2,7 +2,7 @@
 async function loadChat() {
     const response = await fetch('/get-user-conversations', {
         method: 'GET',
-        credentials: 'same-origin' // This ensures cookies are sent with the request
+        credentials: 'include'
     });
 
     if (!response.ok) {
