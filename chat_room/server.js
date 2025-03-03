@@ -67,25 +67,33 @@ app.post('/create-account', async (req, res) => {
     });
 });
 
-// Route to handle Sign In (POST request)
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body; // Change `username` to `email`
+    console.log("Login request received. Body:", req.body); // Log request body
 
-    console.log('Login request received:', req.body);
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+    }
 
-    const query = 'SELECT * FROM users WHERE email = ?'; // Use email instead of username
+    const query = 'SELECT * FROM users WHERE email = ?';
 
     db.execute(query, [email], async (err, results) => {
-        if (err || results.length === 0) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (results.length === 0) {
+            return res.status(400).json({ message: "Invalid email or password" });
         }
 
         const user = results[0];
+        console.log("User found in DB:", user);
 
         // Compare password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+            return res.status(400).json({ message: "Invalid email or password" });
         }
 
         // Set a cookie with the user ID
@@ -94,6 +102,7 @@ app.post('/login', async (req, res) => {
         res.status(200).json({ message: 'Login successful', user });
     });
 });
+
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body; // Change `username` to `email`
