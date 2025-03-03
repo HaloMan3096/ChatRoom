@@ -22,8 +22,9 @@ const mysql = require('mysql2');
 const db = mysql.createConnection({
     host: 'chatroomdatabase.cxaw4yoqi11r.us-east-2.rds.amazonaws.com',
     user: 'admin',
-    password: 'XrPzMsJyLral85ThImSx',
-    database: 'chatroomdatabase'
+    password: 'dsgJLGhTXdfAQ06ax5ox',
+    database: 'chatroomdatabase',
+    port: 3306
 });
 
 // Connect to the database
