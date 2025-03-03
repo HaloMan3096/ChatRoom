@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm');
+    const loginForm = document.getElementById('login-form');
 
     if (!loginForm) {
         console.error("Error: loginForm not found");
