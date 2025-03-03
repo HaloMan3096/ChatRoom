@@ -76,7 +76,7 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const query = 'SELECT * FROM users WHERE email = ?';
+        const query = 'SELECT * FROM User WHERE email = ?';
 
         db.execute(query, [email], async (err, results) => {
             if (err) {
