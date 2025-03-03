@@ -63,6 +63,7 @@ app.post('/create-account', async (req, res) => {
 
 // Route to handle Sign In (POST request)
 app.post('/login', async (req, res) => {
+    console.log("OWOWOWOWOOWOWOWOOWOWOW");
     const { username, password } = req.body;
 
     const query = 'SELECT * FROM users WHERE username = ?';
@@ -96,7 +97,6 @@ app.post('/login', async (req, res) => {
 
 
 
-const SECRET_KEY = process.env.SECRET_KEY;
 app.post('/login', async (req, res) => {
     console.log('Login request received:', req.body);
 
