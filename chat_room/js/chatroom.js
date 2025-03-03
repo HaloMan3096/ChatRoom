@@ -1,5 +1,22 @@
+let currentUsername = '';
+
+
+async function getCurrentUser() {
+    try {
+        const response = await fetch('/profile', { credentials: 'include' });
+        if (!response.ok) throw new Error('User not found');
+        const data = await response.json();
+        currentUsername = data.username;
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        window.location.href = '../html/SignIn.html'; // Redirect if not authenticated
+    }
+}
+
 // Function to check if the user is authenticated and get their conversations
 async function loadChat() {
+    await getCurrentUser();
+
     const response = await fetch('/get-user-conversations', {
         method: 'GET',
         credentials: 'include'
@@ -26,14 +43,13 @@ function displayMessages(conversation) {
     const messageArea = document.getElementById('message-area');
     const conversationContainer = document.createElement('div');
     conversationContainer.classList.add('conversation-container');
-    conversationContainer.innerHTML = `<h4>Conversation ID: ${conversation.cid}</h4>`;
 
     conversation.messages.forEach(message => {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message-container');
 
         // Check if the message was sent by the logged-in user
-        if (message.sender_name === 'CurrentUserName') {
+        if (message.sender_name === currentUsername) {
             messageElement.classList.add('darker');  // Current user's message styling
             messageElement.innerHTML = `
                 <img class="avatar right" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
