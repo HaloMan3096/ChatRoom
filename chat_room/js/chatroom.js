@@ -122,6 +122,3 @@ if (submitButton) {
         }
     });
 }
-
-// Load the user's chat when the page loads
-loadChat();
