@@ -62,23 +62,38 @@ app.post('/create-account', async (req, res) => {
 });
 
 // Route to handle Sign In (POST request)
-app.post('/sign-in', (req, res) => {
-    const { email, password } = req.body;
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
 
-    // Check if the user exists and password matches
-    const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
-    db.query(query, [email, password], (err, result) => {
-        if (err) {
-            console.error('Error querying the database:', err);
-            return res.status(500).send('Error signing in');
+    const query = 'SELECT * FROM users WHERE username = ?';
+    db.execute(query, [username], async (err, results) => {
+        if (err || results.length === 0) {
+            return res.status(400).json({ message: 'Invalid username or password' });
         }
-        if (result.length > 0) {
-            res.send('Sign In successful');
-        } else {
-            res.status(401).send('Invalid email or password');
+
+        const user = results[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid username or password' });
         }
+
+        // Create a JWT token
+        const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET_KEY, {
+            expiresIn: '1h',
+        });
+
+        // Set an HttpOnly cookie
+        res.cookie('authToken', token, {
+            httpOnly: true,
+            secure: true, // Ensure HTTPS is used
+            sameSite: 'Strict', // Protect against CSRF
+            maxAge: 3600000, // 1 hour
+        });
+
+        res.status(200).json({ message: 'Login successful' });
     });
 });
+
 
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -119,17 +134,18 @@ function isAuthenticated(req, res, next) {
     next();
 }
 
-app.get('/profile', isAuthenticated, (req, res) => {
-    const userId = req.userId;
+app.get('/profile', (req, res) => {
+    const token = req.cookies.authToken; // Read from cookie
+    if (!token) {
+        return res.status(401).json({ message: 'Not authenticated' });
+    }
 
-    const query = 'SELECT * FROM users WHERE id = ?';
-    db.execute(query, [userId], (err, results) => {
-        if (err || results.length === 0) {
-            return res.status(500).json({ message: 'Error fetching profile' });
-        }
-
-        res.status(200).json(results[0]);
-    });
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        res.status(200).json({ username: decoded.username });
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid token' });
+    }
 });
 
 // Messages
