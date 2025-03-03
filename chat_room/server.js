@@ -68,41 +68,44 @@ app.post('/create-account', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    console.log("Login request received. Body:", req.body); // Log request body
+    try {
+        console.log("Login request received. Body:", req.body);
 
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ message: "Email and password are required" });
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        const query = 'SELECT * FROM users WHERE email = ?';
+
+        db.execute(query, [email], async (err, results) => {
+            if (err) {
+                console.error("Database error:", err);
+                return res.status(500).json({ message: "Internal server error" });
+            }
+
+            if (results.length === 0) {
+                return res.status(400).json({ message: "Invalid email or password" });
+            }
+
+            const user = results[0];
+            console.log("User found in DB:", user);
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ message: "Invalid email or password" });
+            }
+
+            res.cookie('userId', user.id, { httpOnly: true, secure: true });
+
+            res.status(200).json({ message: 'Login successful', user });
+        });
+
+    } catch (error) {
+        console.error("Unexpected error:", error);
+        res.status(500).json({ message: "Server crashed" });
     }
-
-    const query = 'SELECT * FROM users WHERE email = ?';
-
-    db.execute(query, [email], async (err, results) => {
-        if (err) {
-            console.error("Database error:", err);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (results.length === 0) {
-            return res.status(400).json({ message: "Invalid email or password" });
-        }
-
-        const user = results[0];
-        console.log("User found in DB:", user);
-
-        // Compare password with the stored hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Invalid email or password" });
-        }
-
-        // Set a cookie with the user ID
-        res.cookie('userId', user.id, { httpOnly: true, secure: true });
-
-        res.status(200).json({ message: 'Login successful', user });
-    });
 });
-
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body; // Change `username` to `email`
