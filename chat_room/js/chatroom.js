@@ -17,13 +17,13 @@ async function loadChat() {
             displayMessages(conversation); // Display all conversations
         });
     } else {
-        document.getElementById('messageArea').innerHTML = "<p>No conversations found.</p>";
+        document.getElementById('message-area').innerHTML = "<p>No conversations found.</p>";
     }
 }
 
 // Function to display messages in the chat area
 function displayMessages(conversation) {
-    const messageArea = document.getElementById('messageArea');
+    const messageArea = document.getElementById('message-area');
     const conversationContainer = document.createElement('div');
     conversationContainer.classList.add('conversation-container');
     conversationContainer.innerHTML = `<h4>Conversation ID: ${conversation.cid}</h4>`;
