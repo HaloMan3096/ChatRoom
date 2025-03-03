@@ -1,22 +1,18 @@
 document.getElementById('login-form').addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    console.log("AHHHHHHHHHHHHHH");
-
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
     try {
-        const response = await fetch('/login', {
+        const response = await fetch('http://localhost:3000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email, password }),
-            credentials: 'include'  // Important to send cookies!
+            body: JSON.stringify({ email, password }),
+            credentials: 'include',
         });
 
         const data = await response.json();
-        console.log('Server Response:', data);
-
         if (response.ok) {
             alert("Login successful!");
             window.location.href = '../index.html';
@@ -25,7 +21,6 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         }
     } catch (error) {
         console.error('Error logging in:', error);
-        alert('An error occurred. Try again.');
+        alert('An error occurred. Check the console for details.');
     }
 });
-
