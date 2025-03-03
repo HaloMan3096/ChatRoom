@@ -3,7 +3,7 @@ let currentUsername = '';
 
 async function getCurrentUser() {
     try {
-        const response = await fetch('/profile', { credentials: 'include' });
+        const response = await fetch('/get-user', { credentials: 'include' });
         if (!response.ok) throw new Error('User not found');
         const data = await response.json();
         currentUsername = data.username;

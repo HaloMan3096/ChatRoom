@@ -120,17 +120,27 @@ function isAuthenticated(req, res, next) {
     next();
 }
 
-app.get('/profile', (req, res) => {
-    const token = req.cookies.authToken; // Read from cookie
-    if (!token) {
-        return res.status(401).json({ message: 'Not authenticated' });
+app.get('/get-user', async (req, res) => {
+    const userId = req.cookies.userId;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        res.status(200).json({ username: decoded.username });
+        const [users] = await db.promise().query(`
+            SELECT username FROM User WHERE uid = ?
+        `, [userId]);
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ username: users[0].username });
+
     } catch (error) {
-        res.status(401).json({ message: 'Invalid token' });
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
