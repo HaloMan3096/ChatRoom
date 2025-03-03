@@ -72,4 +72,4 @@ document.getElementById('sendMessageBtn').addEventListener('click', async () => 
 });
 
 // Load the user's chat when the page loads
-// loadChat();
+loadChat();

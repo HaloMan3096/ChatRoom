@@ -160,45 +160,49 @@ app.post('/send-message', isAuthenticated, (req, res) => {
 // Route to fetch conversations and their messages for the logged-in user
 app.get('/get-user-conversations', async (req, res) => {
     try {
-        // Get the user id from the cookie (you should be checking if the user is authenticated)
         const userId = req.cookies.userId;
 
         if (!userId) {
-            return res.status(401).send('Unauthorized');
+            return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        // Query to get conversations (Chats) related to this user
-        const [conversations] = await db.query(`
-            SELECT c.cid, c.created_at
-            FROM Chat c
-            INNER JOIN Chats ch ON c.cid = ch.cid
+        // Get all chat IDs the user is part of, using `created_at` from Chats
+        const [conversations] = await db.promise().query(`
+            SELECT DISTINCT ch.cid, MIN(ch.created_at) AS joined_at
+            FROM Chats ch
             WHERE ch.uid = ?
-            GROUP BY c.cid
-            ORDER BY c.created_at DESC
+            GROUP BY ch.cid
+            ORDER BY joined_at DESC
         `, [userId]);
 
+        if (conversations.length === 0) {
+            return res.status(200).json([]); // No conversations found
+        }
+
+        // Fetch messages for each conversation
         const fullConversations = await Promise.all(conversations.map(async (conversation) => {
-            // For each conversation, fetch all messages, sorted by created_at
-            const [messages] = await db.query(`
-                SELECT ch.line_text, ch.created_at, u.UserName as sender_name
+            const [messages] = await db.promise().query(`
+                SELECT ch.line_text, ch.created_at, u.username AS sender_name
                 FROM Chats ch
-                INNER JOIN User u ON ch.uid = u.uid
+                JOIN User u ON ch.uid = u.uid
                 WHERE ch.cid = ?
-                ORDER BY ch.created_at
+                ORDER BY ch.created_at ASC
             `, [conversation.cid]);
 
-            conversation.messages = messages;
-            return conversation;
+            return {
+                ...conversation,
+                messages
+            };
         }));
 
-        // Return the conversations with their messages
-        res.json(fullConversations);
+        res.status(200).json(fullConversations);
 
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
+        console.error("Error fetching conversations:", error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 app.use(cors({
     origin: 'http://localhost:3000',
