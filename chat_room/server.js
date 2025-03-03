@@ -3,6 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const app = express();
+require('dotenv').config(); // Load .env variables
 
 // Use cookie-parser middleware
 app.use(cookieParser());
@@ -24,10 +25,10 @@ app.listen(PORT, '0.0.0.0', () => {
 const mysql = require('mysql2');
 
 const db = mysql.createConnection({
-    host: 'chatroomdatabase.cxaw4yoqi11r.us-east-2.rds.amazonaws.com',
-    user: 'admin',
-    password: 'dsgJLGhTXdfAQ06ax5ox',
-    database: 'chatroomdatabase',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     port: 3306
 });
 
@@ -79,29 +80,30 @@ app.post('/sign-in', (req, res) => {
     });
 });
 
-// Login Route
+
+const SECRET_KEY = process.env.SECRET_KEY;
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    const query = 'SELECT * FROM users WHERE username = ?';
-
+    const query = 'SELECT * FROM User WHERE UserName = ?';
     db.execute(query, [username], async (err, results) => {
         if (err || results.length === 0) {
             return res.status(400).json({ message: 'Invalid username or password' });
         }
 
         const user = results[0];
-
-        // Compare password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid username or password' });
         }
 
-        // Set a cookie with the user ID (you can also store it in JWT for better security)
-        res.cookie('userId', user.id, { httpOnly: true, secure: true });
+        // Generate JWT token
+        const token = jwt.sign({ uid: user.uid, username: user.UserName }, SECRET_KEY, { expiresIn: '1h' });
 
-        res.status(200).json({ message: 'Login successful', user });
+        // Set cookie with token
+        res.cookie('authToken', token, { httpOnly: true, secure: false }); // Set `secure: true` if using HTTPS
+
+        res.status(200).json({ message: 'Login successful', token });
     });
 });
 
