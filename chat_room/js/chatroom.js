@@ -1,6 +1,7 @@
 let currentUsername = '';
+import {openChat} from "./index";
 
-async function loadUserChats() {
+export async function loadUserChats() {
     try {
         const response = await fetch('/get-user-chats', { credentials: 'include' });
         if (!response.ok) throw new Error('Failed to fetch chats');

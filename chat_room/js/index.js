@@ -1,4 +1,6 @@
-function openChat(chatId) {
+import {loadUserChats} from './chatroom.js';
+
+export function openChat(chatId) {
     console.log("Going to chat #" + chatId);
     window.location.href = `chat.html?cid=${chatId}`;
 }
