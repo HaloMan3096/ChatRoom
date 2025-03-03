@@ -98,27 +98,41 @@ app.post('/login', async (req, res) => {
 
 const SECRET_KEY = process.env.SECRET_KEY;
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    console.log('Login request received:', req.body);
 
-    const query = 'SELECT * FROM User WHERE UserName = ?';
+    const { username, password } = req.body;
+    const query = 'SELECT * FROM users WHERE username = ?';
+
     db.execute(query, [username], async (err, results) => {
         if (err || results.length === 0) {
+            console.log('User not found or error:', err);
             return res.status(400).json({ message: 'Invalid username or password' });
         }
 
         const user = results[0];
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
+            console.log('Password mismatch');
             return res.status(400).json({ message: 'Invalid username or password' });
         }
 
-        // Generate JWT token
-        const token = jwt.sign({ uid: user.uid, username: user.UserName }, SECRET_KEY, { expiresIn: '1h' });
+        console.log('User authenticated:', user.username);
 
-        // Set cookie with token
-        res.cookie('authToken', token, { httpOnly: true, secure: false }); // Set `secure: true` if using HTTPS
+        // Generate JWT Token
+        const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET_KEY, {
+            expiresIn: '1h',
+        });
 
-        res.status(200).json({ message: 'Login successful', token });
+        // Set the HTTP-only cookie
+        res.cookie('authToken', token, {
+            httpOnly: true,
+            secure: false, // Set to true in production (HTTPS required)
+            sameSite: 'Strict',
+            maxAge: 3600000, // 1 hour
+        });
+
+        console.log('Cookie set successfully');
+        res.status(200).json({ message: 'Login successful' });
     });
 });
 
