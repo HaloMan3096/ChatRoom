@@ -227,3 +227,10 @@ app.get('/get-user-conversations', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+const cors = require('cors');
+
+app.use(cors({
+    origin: 'http://localhost:3000',  // Frontend URL (adjust as needed)
+    credentials: true  // Allow cookies to be sent
+}));
