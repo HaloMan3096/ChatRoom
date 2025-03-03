@@ -21,7 +21,24 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// MySQL database connection
+// Connect to the database
+db.connect(err => {
+    if (err) {
+        console.error('Database connection failed:', err.stack);
+        return;
+    }
+    console.log('Connected to MySQL RDS.');
+});
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+
+const mysql = require('mysql2');
+
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -39,11 +56,6 @@ db.connect(err => {
     console.log('Connected to MySQL RDS.');
 });
 
-// Start server
-const PORT = 3000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
-});
 
 // Create Account Route
 app.post('/create-account', async (req, res) => {
