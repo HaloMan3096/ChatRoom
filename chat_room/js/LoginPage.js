@@ -5,14 +5,16 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
     const password = document.getElementById('loginPassword').value;
 
     try {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-            credentials: 'include',
+            body: JSON.stringify({ email: email, password }), // Sending `email` instead of `username`
+            credentials: 'include'  // Important to send cookies!
         });
 
         const data = await response.json();
+        console.log('Server Response:', data);
+
         if (response.ok) {
             alert("Login successful!");
             window.location.href = '../index.html';
@@ -21,6 +23,6 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
         }
     } catch (error) {
         console.error('Error logging in:', error);
-        alert('An error occurred. Check the console for details.');
+        alert('An error occurred. Try again.');
     }
 });

@@ -98,43 +98,32 @@ app.post('/login', async (req, res) => {
 
 
 app.post('/login', async (req, res) => {
+    const { email, password } = req.body; // Change `username` to `email`
+
     console.log('Login request received:', req.body);
 
-    const { username, password } = req.body;
-    const query = 'SELECT * FROM users WHERE username = ?';
+    const query = 'SELECT * FROM users WHERE email = ?'; // Use email instead of username
 
-    db.execute(query, [username], async (err, results) => {
+    db.execute(query, [email], async (err, results) => {
         if (err || results.length === 0) {
-            console.log('User not found or error:', err);
-            return res.status(400).json({ message: 'Invalid username or password' });
+            return res.status(400).json({ message: 'Invalid email or password' });
         }
 
         const user = results[0];
+
+        // Compare password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            console.log('Password mismatch');
-            return res.status(400).json({ message: 'Invalid username or password' });
+            return res.status(400).json({ message: 'Invalid email or password' });
         }
 
-        console.log('User authenticated:', user.username);
+        // Set a cookie with the user ID
+        res.cookie('userId', user.id, { httpOnly: true, secure: true });
 
-        // Generate JWT Token
-        const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET_KEY, {
-            expiresIn: '1h',
-        });
-
-        // Set the HTTP-only cookie
-        res.cookie('authToken', token, {
-            httpOnly: true,
-            secure: false, // Set to true in production (HTTPS required)
-            sameSite: 'Strict',
-            maxAge: 3600000, // 1 hour
-        });
-
-        console.log('Cookie set successfully');
-        res.status(200).json({ message: 'Login successful' });
+        res.status(200).json({ message: 'Login successful', user });
     });
 });
+
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {
