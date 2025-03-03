@@ -27,20 +27,3 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
     }
 });
 
-// Function to check if a user is logged in
-async function getUser() {
-    try {
-        const response = await fetch('/profile', { method: 'GET', credentials: 'include' });
-        const data = await response.json();
-        if (response.ok) {
-            console.log(`User logged in: ${data.username}`);
-        } else {
-            window.location.href = '../html/SignIn.html';  // Redirect to login if no user found
-        }
-    } catch (error) {
-        console.error('Error fetching user profile:', error);
-        window.location.href = '../html/SignIn.html';
-    }
-}
-
-getUser();  // Check user session on page load
