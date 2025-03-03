@@ -99,7 +99,7 @@ app.post('/login', async (req, res) => {
             res.cookie('userId', user.id, { httpOnly: true, secure: true });
 
             res.status(200).json({ message: 'Login successful', user });
-            res.cookie('testCookie', 'hello', { httpOnly: true, secure: false, sameSite: 'Lax' });
+            res.cookie('userId', user.id, { httpOnly: true, sameSite: 'Lax' });
         });
 
     } catch (error) {
