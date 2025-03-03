@@ -76,7 +76,7 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const query = 'SELECT * FROM users WHERE email = ?';
+        const query = 'SELECT * FROM User WHERE email = ?';
 
         db.execute(query, [email], async (err, results) => {
             if (err) {
@@ -89,29 +89,24 @@ app.post('/login', async (req, res) => {
             }
 
             const user = results[0];
-            const isMatch = await bcrypt.compare(password, user.password);
+            console.log("User found in DB:", user);
 
+            const isMatch = password === user.password;
             if (!isMatch) {
                 return res.status(400).json({ message: "Invalid email or password" });
             }
 
-            // Set the cookie before sending a response
-            res.cookie('userId', user.id, {
-                httpOnly: true,
-                secure: false, // Set to true if using HTTPS
-                sameSite: 'Lax'
-            });
+            res.cookie('userId', user.id, { httpOnly: true, secure: true });
 
-            // Redirect to index.html after successful login
-            return res.redirect('/index.html');  // This will redirect to your index page
+            res.status(200).json({ message: 'Login successful', user });
+            res.cookie('userId', user.id, { httpOnly: true, sameSite: 'Lax' });
         });
 
     } catch (error) {
         console.error("Unexpected error:", error);
-        return res.status(500).json({ message: "Server crashed" });
+        res.status(500).json({ message: "Server crashed" });
     }
 });
-
 
 
 // Middleware to check if user is logged in
