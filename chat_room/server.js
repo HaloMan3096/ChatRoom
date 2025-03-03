@@ -1,9 +1,14 @@
-const path = require('path');
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 const app = express();
+const mysql = require('mysql2');
+const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const path = require('path');
 require('dotenv').config(); // Load .env variables
+
+// Middleware to parse JSON bodies
+app.use(express.json());
 
 // Use cookie-parser middleware
 app.use(cookieParser());
@@ -16,14 +21,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Start server
-const PORT = 3000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-const mysql = require('mysql2');
-
+// MySQL database connection
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -41,6 +39,11 @@ db.connect(err => {
     console.log('Connected to MySQL RDS.');
 });
 
+// Start server
+const PORT = 3000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+});
 
 // Create Account Route
 app.post('/create-account', async (req, res) => {
@@ -63,38 +66,31 @@ app.post('/create-account', async (req, res) => {
 
 // Route to handle Sign In (POST request)
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body; // Change `username` to `email`
 
-    const query = 'SELECT * FROM users WHERE username = ?';
-    db.execute(query, [username], async (err, results) => {
+    console.log('Login request received:', req.body);
+
+    const query = 'SELECT * FROM users WHERE email = ?'; // Use email instead of username
+
+    db.execute(query, [email], async (err, results) => {
         if (err || results.length === 0) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+            return res.status(400).json({ message: 'Invalid email or password' });
         }
 
         const user = results[0];
+
+        // Compare password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+            return res.status(400).json({ message: 'Invalid email or password' });
         }
 
-        // Create a JWT token
-        const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET_KEY, {
-            expiresIn: '1h',
-        });
+        // Set a cookie with the user ID
+        res.cookie('userId', user.id, { httpOnly: true, secure: true });
 
-        // Set an HttpOnly cookie
-        res.cookie('authToken', token, {
-            httpOnly: true,
-            secure: true, // Ensure HTTPS is used
-            sameSite: 'Strict', // Protect against CSRF
-            maxAge: 3600000, // 1 hour
-        });
-
-        res.status(200).json({ message: 'Login successful' });
+        res.status(200).json({ message: 'Login successful', user });
     });
 });
-
-
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body; // Change `username` to `email`
