@@ -1,6 +1,9 @@
-import {openChat} from "./index";
-
 let currentUsername = '';
+
+export function openChat(chatId) {
+    console.log("Going to chat #" + chatId);
+    window.location.href = `chat.html?cid=${chatId}`;
+}
 
 export async function loadUserChats() {
     try {
