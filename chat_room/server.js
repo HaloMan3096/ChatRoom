@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 require('dotenv').config(); // Load .env variables
+const cors = require('cors');
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -213,8 +214,6 @@ app.get('/get-user-conversations', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
-
-const cors = require('cors');
 
 app.use(cors({
     origin: 'http://localhost:3000',  // Frontend URL (adjust as needed)
