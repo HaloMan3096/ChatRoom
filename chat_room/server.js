@@ -223,10 +223,11 @@ app.get('/get-user-chats', async (req, res) => {
     try {
         // Get all chat IDs where the user is involved
         const [chats] = await db.promise().query(`
-            SELECT DISTINCT c.cid
+            SELECT c.cid
             FROM Chat c
-            INNER JOIN Chats ch ON c.cid = ch.cid
+                     INNER JOIN Chats ch ON c.cid = ch.cid
             WHERE ch.uid = ?
+            GROUP BY c.cid
             ORDER BY MAX(ch.created_at) DESC;
         `, [userId]);
 
