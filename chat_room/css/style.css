@@ -92,3 +92,23 @@ body {
     box-shadow: 4px 4px 0 rgba(0, 0, 0, .2);
     padding: 15px;
 }
+
+
+/* Login/Create account pages */
+
+.login-background {
+    background-color: var(--fuzzy-wuzzy-brown-light);
+}
+
+.account-create-form{
+    background: #efefef;
+    border: 1px solid black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.account-create-form a{
+    text-decoration: none;
+    color: black;
+}

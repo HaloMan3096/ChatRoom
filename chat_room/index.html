@@ -18,22 +18,16 @@
 
 <main>
     <section class="container message-container">
-       <section class="message-area overflow-auto">
-           <div class="message-container">
-               <img class="avatar" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
-               <span class="time-right">Sender Name - Time Stamp</span>
-               <span class="bubble6 time-left msg-left">Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I'm in a transitional period so I don't wanna kill you, I wanna help you. But I can't give you this case, it don't belong to me. Besides, I've already been through too much shit this morning over this case to hand it over to your dumb ass.</span>
-           </div>
-           <div class="message-container darker">
-               <img class="avatar right" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
-               <span class="time-left">Sender Name - Time Stamp</span>
-               <span class="bubble6 time-left msg-right">Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I'm in a transitional period so I don't wanna kill you, I wanna help you. But I can't give you this case, it don't belong to me. Besides, I've already been through too much shit this morning over this case to hand it over to your dumb ass.</span>
-           </div>
-       </section>
+        <!-- Message Area: Displaying Messages -->
+        <section class="message-area overflow-auto" id="message-area">
+            <!-- Messages will be dynamically added here by JavaScript -->
+        </section>
+
+        <!-- Input Group: For typing and sending messages -->
         <section class="input-group">
-            <input type="text" class="form-control" placeholder="Message" aria-label="Type Message" aria-describedby="basic-addon2">
+            <input type="text" class="form-control" id="message" placeholder="Message" aria-label="Type Message" aria-describedby="basic-addon2">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button">&#8618;</button>
+                <button class="btn btn-outline-secondary" id="send-button" type="button">&#8618;</button>
             </div>
         </section>
     </section>
