@@ -107,33 +107,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body; // Change `username` to `email`
-
-    console.log('Login request received:', req.body);
-
-    const query = 'SELECT * FROM users WHERE email = ?'; // Use email instead of username
-
-    db.execute(query, [email], async (err, results) => {
-        if (err || results.length === 0) {
-            return res.status(400).json({ message: 'Invalid email or password' });
-        }
-
-        const user = results[0];
-
-        // Compare password with the stored hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid email or password' });
-        }
-
-        // Set a cookie with the user ID
-        res.cookie('userId', user.id, { httpOnly: true, secure: true });
-
-        res.status(200).json({ message: 'Login successful', user });
-    });
-});
-
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {
