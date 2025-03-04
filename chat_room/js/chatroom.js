@@ -132,3 +132,7 @@ if (submitButton) {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadChat();
+});
