@@ -146,16 +146,32 @@ app.get('/get-user', async (req, res) => {
 // Route to send a message
 app.post('/send-message', isAuthenticated, (req, res) => {
     const userId = req.userId;
-    const { chatId, message } = req.body;
-
-    if (!chatId || !message) {
+    const { otherUsername, chatId, message } = req.body;
+    let otherUser;
+    if (!chatId || !message || !otherUsername) {
         return res.status(400).json({ message: 'Missing chat ID or message' });
     }
 
-    // Insert the new message into the database
-    const query = 'INSERT INTO Chats (cid, uid, line_text, created_at) VALUES (?, ?, ?, NOW())';
+    try {
+        const [users] = db.promise().query(`
+            SELECT uid FROM User WHERE username = ?
+        `, [otherUsername]);
 
-    db.execute(query, [chatId, userId, message], (err, results) => {
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        otherUser = users[0];
+
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+
+    // Insert the new message into the database
+    const query = 'INSERT INTO Chats (other_uid, cid, uid, line_text, created_at) VALUES (?, ?, ?, ?, NOW())';
+
+    db.execute(query, [otherUser, chatId, userId, message], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error sending message' });
@@ -254,7 +270,7 @@ app.post('/create-chat', isAuthenticated, (req, res) => {
     }
 
     // Get the user ID of the other user
-    const userQuery = 'SELECT uid FROM Users WHERE username = ?';
+    const userQuery = 'SELECT uid FROM User WHERE UserName = ?';
     db.execute(userQuery, [otherUsername], (err, results) => {
         if (err) {
             console.error(err);

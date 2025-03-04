@@ -1,4 +1,5 @@
 let currentUsername = '';
+let otherUsername = '';
 
 function openChat(chatId) {
     window.location.href = `../html/Chat.html?cid=${chatId}`;
@@ -112,6 +113,7 @@ function displayMessages(conversation) {
                 <span class="bubble6 time-left msg-right">${message.line_text}</span>
             `;
         } else {
+            otherUsername = message.sender_name; // should prob do this once when the page loads instead of everytime we write the messages
             messageElement.innerHTML = `
                 <img class="avatar" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
                 <span class="time-right">${message.sender_name} - ${formatTimestamp(message.created_at)}</span>
@@ -151,7 +153,7 @@ if (submitButton) {
             const response = await fetch('/send-message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chatId, message: messageText })
+                body: JSON.stringify({ otherUsername, chatId, message: messageText })
             });
 
             if (response.ok) {
