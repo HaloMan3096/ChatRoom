@@ -24,10 +24,21 @@ export async function loadUserChats() {
             const chatElement = document.createElement('li');
             chatElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center', 'chat');
 
-            chatElement.innerHTML = `<a href="#" onclick="openChat(${chat.cid})">Chat ${chat.cid}</a>`;
+            // Add a `data-chat-id` attribute and event listener instead of `onclick`
+            const chatLink = document.createElement('a');
+            chatLink.href = "#";
+            chatLink.textContent = `Chat ${chat.cid}`;
+            chatLink.dataset.chatId = chat.cid;
 
+            chatLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                openChat(chat.cid);
+            });
+
+            chatElement.appendChild(chatLink);
             chatsContainer.appendChild(chatElement);
         });
+
 
     } catch (error) {
         console.error('Error loading chats:', error);
