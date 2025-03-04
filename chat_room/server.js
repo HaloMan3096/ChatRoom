@@ -147,10 +147,11 @@ app.get('/get-user', async (req, res) => {
 app.post('/send-message', isAuthenticated, (req, res) => {
     const userId = req.userId;
     const { otherUsername, chatId, message } = req.body;
-    let otherUser;
     if (!chatId || !message || !otherUsername) {
         return res.status(400).json({ message: 'Missing chat ID or message' });
     }
+
+    console.log(userId, chatId, message);
 
     const [users] = db.promise().query(`
         SELECT uid FROM User WHERE username = ?
@@ -160,7 +161,7 @@ app.post('/send-message', isAuthenticated, (req, res) => {
         return res.status(404).json({ message: 'User not found' });
     }
 
-    otherUser = users[0];
+    let otherUser = users[0];
 
     console.log(otherUser, userId, chatId, message);
     // Insert the new message into the database
