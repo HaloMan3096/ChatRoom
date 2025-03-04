@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 alert("Account created successfully! Redirecting to login...");
-                window.location.href = "login.html";
+                window.location.href = "../html/login.html";
             } else {
                 const errorData = await response.json();
                 alert(errorData.message || "Failed to create account.");
