@@ -147,6 +147,8 @@ if (submitButton) {
             return;
         }
 
+        console.log(otherUsername, chatId, messageText);
+
         try {
             const response = await fetch('/send-message', {
                 method: 'POST',

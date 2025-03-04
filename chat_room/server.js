@@ -165,7 +165,7 @@ app.post('/send-message', isAuthenticated, (req, res) => {
 
     } catch (error) {
         console.error("Error fetching user:", error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error fetching user' });
     }
 
     // Insert the new message into the database
