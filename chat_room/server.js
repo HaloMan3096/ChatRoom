@@ -228,7 +228,7 @@ app.get('/get-user-chats', async (req, res) => {
     try {
         // Get all chat IDs where the user is involved
         const [chats] = await db.promise().query(`
-            SELECT c.cid
+            SELECT *
             FROM Chat c
                      INNER JOIN Chats ch ON c.cid = ch.cid
             WHERE ch.uid = ?
