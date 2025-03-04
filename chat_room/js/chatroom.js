@@ -117,7 +117,7 @@ function displayMessages(conversation) {
 let submitButton = document.getElementById('sendMessageBtn');
 if (submitButton) {
     submitButton.addEventListener('click', async () => {
-        const messageText = document.getElementById('message').value; // Ensure correct input ID
+        const messageText = document.getElementById('messageInput').value;
         const urlParams = new URLSearchParams(window.location.search);
         const chatId = urlParams.get('cid'); // Get chat ID from URL
 
