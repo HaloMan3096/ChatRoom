@@ -18,11 +18,26 @@
 </header>
 
 <main role="main" class="">
-    <section class="container chats-container">
-        <ul class="list-group chats">
-        </ul>
-        <a class="btn btn-outline-dark add-Chat">&plus;</a>
-    </section>
+    <div class="row justify-content-center">
+        <section class="col-md-6 account-create-form">
+            <h2 class="text-center mt-5">Create Account</h2>
+
+            <!-- Account Creation Form -->
+            <form>
+                <div class="form-group">
+                    <label for="otherUser" class="form-text">Other Username</label>
+                    <input type="text" maxlength="30" class="form-control" id="otherUser" placeholder="Enter username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message" class="form-text">Message: </label>
+                    <input type="text" class="form-control" id="message" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+            </form>
+        </section>
+    </div>
 </main>
 
 <footer></footer>
