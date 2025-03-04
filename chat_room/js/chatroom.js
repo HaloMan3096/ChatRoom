@@ -87,6 +87,8 @@ function displayMessages(conversation) {
     const conversationContainer = document.createElement('div');
     conversationContainer.classList.add('conversation-container');
 
+    messageArea.replaceChildren();
+
     conversation.messages.forEach(message => {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message-container');
@@ -134,7 +136,7 @@ if (submitButton) {
 
         if (response.ok) {
             loadChat();  // Reload the conversation to include the new message
-            document.getElementById('message').value = '';  // Clear the input field
+            document.getElementById('messageInput').value = '';  // Clear the input field
         } else {
             const errorData = await response.json();
             console.error("Server error:", errorData);
