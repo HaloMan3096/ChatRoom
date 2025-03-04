@@ -114,7 +114,7 @@ function displayMessages(conversation) {
         } else {
             messageElement.innerHTML = `
                 <img class="avatar" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
-                <span class="time-right">${message.sender_name} - ${message.created_at}</span>
+                <span class="time-right">${message.sender_name} - ${formatTimestamp(message.created_at)}</span>
                 <span class="bubble6 time-left msg-left">${message.line_text}</span>
             `;
         }
