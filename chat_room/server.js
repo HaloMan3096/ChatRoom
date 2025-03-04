@@ -144,37 +144,38 @@ app.get('/get-user', async (req, res) => {
 // Messages
 
 // Route to send a message
-app.post('/send-message', isAuthenticated, (req, res) => {
-    const userId = req.userId;
-    const { otherUsername, chatId, message } = req.body;
-    if (!chatId || !message || !otherUsername) {
-        return res.status(400).json({ message: 'Missing chat ID or message' });
-    }
+app.post('/send-message', isAuthenticated, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { otherUsername, chatId, message } = req.body;
 
-    console.log(userId, chatId, message);
-
-    const [users] = db.promise().query(`
-        SELECT uid FROM User WHERE username = ?
-    `, [otherUsername]);
-
-    if (users.length === 0) {
-        return res.status(404).json({ message: 'User not found' });
-    }
-
-    let otherUser = users[0];
-
-    console.log(otherUser, userId, chatId, message);
-    // Insert the new message into the database
-    const query = 'INSERT INTO Chats (other_uid, cid, uid, line_text, created_at) VALUES (?, ?, ?, ?, NOW())';
-
-    db.execute(query, [otherUser, chatId, userId, message], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Error sending message' });
+        if (!chatId || !message || !otherUsername) {
+            return res.status(400).json({ message: 'Missing chat ID, message, or other username' });
         }
 
+        console.log("Sending message:", userId, chatId, message);
+
+        // Fetch the other user's ID
+        const [users] = await db.promise().query(`SELECT uid FROM User WHERE username = ?`, [otherUsername]);
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const otherUserId = users[0].uid;
+        console.log("Other User ID:", otherUserId);
+
+        // Insert the new message into the database
+        const query = `INSERT INTO Chats (other_uid, cid, uid, line_text, created_at) VALUES (?, ?, ?, ?, NOW())`;
+
+        await db.promise().execute(query, [otherUserId, chatId, userId, message]);
+
         res.status(200).json({ message: 'Message sent successfully' });
-    });
+
+    } catch (error) {
+        console.error("Error sending message:", error);
+        res.status(500).json({ message: 'Error sending message' });
+    }
 });
 
 
