@@ -17,33 +17,16 @@
     </nav>
 </header>
 
-<main role="main" class="">
-    <div class="row justify-content-center">
-        <section class="col-md-6 account-create-form">
-            <h2 class="text-center mt-5">Create Account</h2>
-
-            <!-- Account Creation Form -->
-            <form>
-                <div class="form-group">
-                    <label for="otherUser" class="form-text">Other Username</label>
-                    <input type="text" maxlength="30" class="form-control" id="otherUser" placeholder="Enter username" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="message" class="form-text">Message: </label>
-                    <input type="text" class="form-control" id="message" placeholder="Enter password" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block">Send Message</button>
-            </form>
-        </section>
-    </div>
+<main role="main" class="content">
+    <section class="container chats-container">
+        <ul class="list-group chats">
+        </ul>
+    </section>
 </main>
 
 <footer></footer>
 
-<script type="module" src="./js/index.js"></script>
-
+<script src="js/index.js"></script>
 <!-- Bootstrap js -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
