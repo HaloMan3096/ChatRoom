@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 alert("Chat created! Redirecting...");
-                window.location.href = `/chat.html?cid=${data.chatId}`;
+                window.location.href = `../html/chat.html?cid=${data.chatId}`;
             } else {
                 alert(data.message);
             }

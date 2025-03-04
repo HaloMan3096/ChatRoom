@@ -281,8 +281,8 @@ app.post('/create-chat', isAuthenticated, (req, res) => {
         const otherUserId = results[0].uid;
 
         // Create a new chat (if not already exists)
-        const chatQuery = 'INSERT INTO Chat (chat_name) VALUES("${otherUsername}  &  ${username}")';
-        db.execute(chatQuery, [], (err, chatResults) => {
+        const chatQuery = 'INSERT INTO Chat (chat_name) VALUES(CONCAT(?, " & ", ?))';
+        db.promise().execute(chatQuery, [otherUsername, username], (err, chatResults) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ message: 'Error creating chat' });
