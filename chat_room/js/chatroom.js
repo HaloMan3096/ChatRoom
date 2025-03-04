@@ -30,7 +30,7 @@ export async function loadUserChats() {
 
             const chatLink = document.createElement('a');
             chatLink.href = "#";
-            chatLink.textContent = `Chat ${chat.cid}`;
+            chatLink.textContent = `${chat.chat_name} ${chat.cid}`;
             chatLink.dataset.chatId = chat.cid;
 
             chatLink.addEventListener('click', (event) => {
