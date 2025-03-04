@@ -13,8 +13,6 @@ export async function loadUserChats() {
         const chats = await response.json();
         const chatsContainer = document.querySelector('.list-group.chats');
 
-        chatsContainer.innerHTML = ''; // Clear existing chats
-
         if (chats.length === 0) {
             chatsContainer.innerHTML = '<li class="list-group-item">No chats found.</li>';
             return;
@@ -168,7 +166,6 @@ if (submitButton) {
     });
 
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
     loadChat();
