@@ -1,8 +1,13 @@
+let currentUsername = '';
+
+import { getCurrentUser } from './chatroom.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
+        currentUsername = getCurrentUser();
 
         const otherUser = document.getElementById("otherUser").value.trim();
         const message = document.getElementById("message").value.trim();
@@ -16,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const response = await fetch("/create-chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ otherUsername: otherUser, message })
+                body: JSON.stringify({ username: currentUsername, otherUsername: otherUser, message })
             });
 
             const data = await response.json();

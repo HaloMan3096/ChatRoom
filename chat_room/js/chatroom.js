@@ -43,7 +43,7 @@ export async function loadUserChats() {
     }
 }
 
-async function getCurrentUser() {
+export async function getCurrentUser() {
     try {
         const response = await fetch('/get-user', { credentials: 'include' });
         if (!response.ok) throw new Error('User not found');

@@ -260,7 +260,7 @@ app.use(cors({
 
 app.post('/create-chat', isAuthenticated, (req, res) => {
     const userId = req.userId;
-    const { otherUsername, message } = req.body;
+    const { username, otherUsername, message } = req.body;
 
     if (!otherUsername || !message) {
         return res.status(400).json({ message: 'Other username and message are required' });
@@ -281,7 +281,7 @@ app.post('/create-chat', isAuthenticated, (req, res) => {
         const otherUserId = results[0].uid;
 
         // Create a new chat (if not already exists)
-        const chatQuery = 'INSERT INTO Chat DEFAULT VALUES';
+        const chatQuery = 'INSERT INTO Chat (chat_name) VALUES(otherUsername + " & " + username)';
         db.execute(chatQuery, [], (err, chatResults) => {
             if (err) {
                 console.error(err);
