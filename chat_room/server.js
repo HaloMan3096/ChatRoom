@@ -146,15 +146,16 @@ app.get('/get-user', async (req, res) => {
 // Route to send a message
 app.post('/send-message', isAuthenticated, (req, res) => {
     const userId = req.userId;
-    const { message } = req.body;
+    const { chatId, message } = req.body;
 
-    // Assuming the first conversation exists
-    const conversationId = 1;  // Update this to be dynamic if needed
+    if (!chatId || !message) {
+        return res.status(400).json({ message: 'Missing chat ID or message' });
+    }
 
     // Insert the new message into the database
     const query = 'INSERT INTO Chats (cid, uid, line_text, created_at) VALUES (?, ?, ?, NOW())';
 
-    db.execute(query, [conversationId, userId, message], (err, results) => {
+    db.execute(query, [chatId, userId, message], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error sending message' });
@@ -163,6 +164,7 @@ app.post('/send-message', isAuthenticated, (req, res) => {
         res.status(200).json({ message: 'Message sent successfully' });
     });
 });
+
 
 // Route to fetch conversations and their messages for the logged-in user
 app.get('/get-user-conversations', async (req, res) => {

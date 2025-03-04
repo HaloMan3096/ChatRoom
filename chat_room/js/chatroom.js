@@ -125,34 +125,46 @@ function displayMessages(conversation) {
     messageArea.appendChild(conversationContainer);  // Append each conversation's messages
 }
 
+function getQueryParam(param) {
+    return new URLSearchParams(window.location.search).get(param);
+}
+
 // Send a new message
 let submitButton = document.getElementById('sendMessageBtn');
 if (submitButton) {
-    submitButton.addEventListener('click', async () => {
-        const messageText = document.getElementById('messageInput').value;
-        const urlParams = new URLSearchParams(window.location.search);
-        const chatId = urlParams.get('cid'); // Get chat ID from URL
+    const chatId = getQueryParam('cid');
 
-        if (!chatId || !messageText.trim()) {
-            alert("Chat ID or message missing.");
+    document.getElementById('sendMessageBtn').addEventListener('click', async () => {
+        const messageText = document.getElementById('messageInput').value.trim();
+
+        if (!messageText) {
+            alert("Message cannot be empty.");
             return;
         }
 
-        const response = await fetch('/send-message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chatId, message: messageText })
-        });
+        if (!chatId) {
+            alert("Missing chat ID.");
+            return;
+        }
 
-        if (response.ok) {
-            loadChat();  // Reload the conversation to include the new message
-            document.getElementById('messageInput').value = '';  // Clear the input field
-        } else {
-            const errorData = await response.json();
-            console.error("Server error:", errorData);
-            alert("Failed to send message: " + (errorData.error || "Unknown error"));
+        try {
+            const response = await fetch('/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chatId, message: messageText })
+            });
+
+            if (response.ok) {
+                loadChat();  // Refresh chat messages
+                document.getElementById('messageInput').value = '';  // Clear input field
+            } else {
+                console.error("Failed to send message.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
         }
     });
+
 }
 
 
