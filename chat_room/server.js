@@ -155,7 +155,7 @@ app.post('/send-message', isAuthenticated, (req, res) => {
     const conversationId = 1;  // Update this to be dynamic if needed
 
     // Insert the new message into the database
-    const query = 'INSERT INTO chat_lines (cid, user_id, line_text, created_at) VALUES (?, ?, ?, NOW())';
+    const query = 'INSERT INTO Chats (cid, user_id, line_text, created_at) VALUES (?, ?, ?, NOW())';
 
     db.execute(query, [conversationId, userId, message], (err, results) => {
         if (err) {
