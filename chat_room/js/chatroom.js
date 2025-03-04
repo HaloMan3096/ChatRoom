@@ -1,8 +1,7 @@
 let currentUsername = '';
 
 function openChat(chatId) {
-    console.log("Going to chat #" + chatId);
-    window.location.href = `chat.html?cid=${chatId}`;
+    window.location.href = `Chat.html?cid=${chatId}`;
 }
 
 export async function loadUserChats() {
