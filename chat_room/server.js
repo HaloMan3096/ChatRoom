@@ -152,21 +152,15 @@ app.post('/send-message', isAuthenticated, (req, res) => {
         return res.status(400).json({ message: 'Missing chat ID or message' });
     }
 
-    try {
-        const [users] = db.promise().query(`
-            SELECT uid FROM User WHERE username = ?
-        `, [otherUsername]);
+    const [users] = db.promise().query(`
+        SELECT uid FROM User WHERE username = ?
+    `, [otherUsername]);
 
-        if (users.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        otherUser = users[0];
-
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        res.status(500).json({ message: 'Server error fetching user' });
+    if (users.length === 0) {
+        return res.status(404).json({ message: 'User not found' });
     }
+
+    otherUser = users[0];
 
     console.log(otherUser, userId, chatId, message);
     // Insert the new message into the database
