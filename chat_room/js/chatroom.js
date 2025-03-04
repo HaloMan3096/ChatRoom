@@ -19,6 +19,8 @@ export async function loadUserChats() {
         const chats = await response.json();
         const chatsContainer = document.querySelector('.list-group.chats');
 
+        console.log(chats);
+
         if (chats.length === 0) {
             chatsContainer.innerHTML = '<li class="list-group-item">No chats found.</li>';
             return;
