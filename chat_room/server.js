@@ -50,14 +50,11 @@ db.connect(err => {
 
 // Create Account Route
 app.post('/create-account', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
-    // Hash the password before saving it to the database
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const query = 'INSERT INTO User (UserName, email, password) VALUES (?, ?, ?)';
 
-    const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
-
-    db.execute(query, [username, hashedPassword], (err, results) => {
+    db.execute(query, [username, email, password], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error creating account' });
