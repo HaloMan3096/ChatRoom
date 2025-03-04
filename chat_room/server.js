@@ -291,8 +291,8 @@ app.post('/create-chat', isAuthenticated, (req, res) => {
             const chatId = chatResults.insertId;
 
             // Insert the first message
-            const messageQuery = 'INSERT INTO Chats (cid, uid, line_text, created_at) VALUES (?, ?, ?, NOW())';
-            db.execute(messageQuery, [chatId, userId, message], (err) => {
+            const messageQuery = 'INSERT INTO Chats (cid, uid, other_uid, line_text, created_at) VALUES (?, ?, ?, ?, NOW())';
+            db.execute(messageQuery, [chatId, userId, otherUserId, message], (err) => {
                 if (err) {
                     console.error(err);
                     return res.status(500).json({ message: 'Error sending message' });
