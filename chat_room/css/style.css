@@ -22,6 +22,8 @@ body {
 }
 
 .chats-container{
+    display: flex;
+    flex-direction: column-reverse;
     background-color: #a7a7a7;
     padding-top: 5px;
     border-top-left-radius: 5px;
