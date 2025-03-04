@@ -117,21 +117,32 @@ function displayMessages(conversation) {
 let submitButton = document.getElementById('sendMessageBtn');
 if (submitButton) {
     submitButton.addEventListener('click', async () => {
-        const messageText = document.getElementById('messageInput').value;
+        const messageText = document.getElementById('message').value; // Ensure correct input ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const chatId = urlParams.get('cid'); // Get chat ID from URL
+
+        if (!chatId || !messageText.trim()) {
+            alert("Chat ID or message missing.");
+            return;
+        }
+
         const response = await fetch('/send-message', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: messageText })
+            body: JSON.stringify({ chatId, message: messageText })
         });
 
         if (response.ok) {
             loadChat();  // Reload the conversation to include the new message
-            document.getElementById('messageInput').value = '';  // Clear the input field
+            document.getElementById('message').value = '';  // Clear the input field
         } else {
-            alert("Failed to send message.");
+            const errorData = await response.json();
+            console.error("Server error:", errorData);
+            alert("Failed to send message: " + (errorData.error || "Unknown error"));
         }
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     loadChat();
