@@ -98,7 +98,7 @@ function displayMessages(conversation) {
             messageElement.classList.add('darker');  // Current user's message styling
             messageElement.innerHTML = `
                 <img class="avatar right" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
-                <span class="time-left">${message.sender_name} - ${Date(message.created_atnew).toISOString().slice(0, 19).replace('T', ' ')}</span>
+                <span class="time-left">${message.sender_name} - ${Date(message.created_atnew)}</span>
                 <span class="bubble6 time-left msg-right">${message.line_text}</span>
             `;
         } else {
