@@ -244,3 +244,49 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'OPTIONS']
 }));
+
+app.post('/create-chat', isAuthenticated, (req, res) => {
+    const userId = req.userId;
+    const { otherUsername, message } = req.body;
+
+    if (!otherUsername || !message) {
+        return res.status(400).json({ message: 'Other username and message are required' });
+    }
+
+    // Get the user ID of the other user
+    const userQuery = 'SELECT uid FROM Users WHERE username = ?';
+    db.execute(userQuery, [otherUsername], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const otherUserId = results[0].uid;
+
+        // Create a new chat (if not already exists)
+        const chatQuery = 'INSERT INTO Chat DEFAULT VALUES';
+        db.execute(chatQuery, [], (err, chatResults) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error creating chat' });
+            }
+
+            const chatId = chatResults.insertId;
+
+            // Insert the first message
+            const messageQuery = 'INSERT INTO Chats (cid, uid, line_text, created_at) VALUES (?, ?, ?, NOW())';
+            db.execute(messageQuery, [chatId, userId, message], (err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ message: 'Error sending message' });
+                }
+
+                res.status(200).json({ message: 'Chat created and message sent', chatId });
+            });
+        });
+    });
+});
