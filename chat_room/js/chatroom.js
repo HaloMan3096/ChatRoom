@@ -81,7 +81,17 @@ async function loadChat() {
     }
 }
 
-// Function to display messages in the chat area
+// Functions to display messages in the chat area
+
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'medium', // Mar 2, 2025
+        timeStyle: 'short',  // 6:46 PM
+    });
+    return formatter.format(date);
+}
+
 function displayMessages(conversation) {
     const messageArea = document.getElementById('message-area');
     const conversationContainer = document.createElement('div');
@@ -113,15 +123,6 @@ function displayMessages(conversation) {
     });
 
     messageArea.appendChild(conversationContainer);  // Append each conversation's messages
-}
-
-function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        dateStyle: 'medium', // Mar 2, 2025
-        timeStyle: 'short',  // 6:46 PM
-    });
-    return formatter.format(date);
 }
 
 // Send a new message
