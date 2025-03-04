@@ -37,6 +37,11 @@ body {
     margin: 2px auto;
 }
 
+.add-Chat{
+    margin: 5px auto;
+    width: 100%;
+}
+
 .message-container {
     border: 2px solid #dedede;
     background-color: #f1f1f1;
