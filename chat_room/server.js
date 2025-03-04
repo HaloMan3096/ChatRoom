@@ -168,6 +168,7 @@ app.post('/send-message', isAuthenticated, (req, res) => {
         res.status(500).json({ message: 'Server error fetching user' });
     }
 
+    console.log(otherUser, userId, chatId, message);
     // Insert the new message into the database
     const query = 'INSERT INTO Chats (other_uid, cid, uid, line_text, created_at) VALUES (?, ?, ?, ?, NOW())';
 
