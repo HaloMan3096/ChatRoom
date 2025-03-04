@@ -178,52 +178,45 @@ app.post('/send-message', isAuthenticated, async (req, res) => {
     }
 });
 
-
-// Route to fetch conversations and their messages for the logged-in user
-app.get('/get-user-conversations', async (req, res) => {
+app.get('/get-chat-messages', async (req, res) => {
     try {
         const userId = req.cookies.userId;
+        const chatId = req.query.cid;
 
         if (!userId) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        // Get all chat IDs the user is part of, using `created_at` from Chats
-        const [conversations] = await db.promise().query(`
-            SELECT DISTINCT ch.cid, MIN(ch.created_at) AS joined_at
-            FROM Chats ch
-            WHERE ch.uid = ?
-            GROUP BY ch.cid
-            ORDER BY joined_at DESC
-        `, [userId]);
-
-        if (conversations.length === 0) {
-            return res.status(200).json([]); // No conversations found
+        if (!chatId) {
+            return res.status(400).json({ message: 'Missing chat ID' });
         }
 
-        // Fetch messages for each conversation
-        const fullConversations = await Promise.all(conversations.map(async (conversation) => {
-            const [messages] = await db.promise().query(`
-                SELECT ch.line_text, ch.created_at, u.username AS sender_name
-                FROM Chats ch
-                JOIN User u ON ch.uid = u.uid
-                WHERE ch.cid = ?
-                ORDER BY ch.created_at ASC
-            `, [conversation.cid]);
+        // Verify if the user is part of the chat
+        const [chatMembership] = await db.promise().query(`
+            SELECT 1 FROM Chats WHERE cid = ? AND uid = ? LIMIT 1
+        `, [chatId, userId]);
 
-            return {
-                ...conversation,
-                messages
-            };
-        }));
+        if (chatMembership.length === 0) {
+            return res.status(403).json({ message: 'Access denied to this chat' });
+        }
 
-        res.status(200).json(fullConversations);
+        // Fetch messages for the specific chat
+        const [messages] = await db.promise().query(`
+            SELECT ch.line_text, ch.created_at, u.username AS sender_name
+            FROM Chats ch
+            JOIN User u ON ch.uid = u.uid
+            WHERE ch.cid = ?
+            ORDER BY ch.created_at ASC
+        `, [chatId]);
+
+        res.status(200).json(messages);
 
     } catch (error) {
-        console.error("Error fetching conversations:", error);
+        console.error("Error fetching chat messages:", error);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 app.get('/get-user-chats', async (req, res) => {
     const userId = req.cookies.userId;

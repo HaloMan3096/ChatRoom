@@ -66,7 +66,6 @@ async function loadChat() {
 
     const chatId = getQueryParam('cid');
     if (!chatId) {
-        alert('Missing chat ID.');
         return;
     }
 
