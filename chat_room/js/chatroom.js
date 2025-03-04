@@ -98,7 +98,7 @@ function displayMessages(conversation) {
             messageElement.classList.add('darker');  // Current user's message styling
             messageElement.innerHTML = `
                 <img class="avatar right" src="https://placehold.co/40" alt="avatar" style="width: 100%;">
-                <span class="time-left">${message.sender_name} - ${Date(message.created_atnew)}</span>
+                <span class="time-left">${message.sender_name} - ${formatTimestamp(message.created_at)}</span>
                 <span class="bubble6 time-left msg-right">${message.line_text}</span>
             `;
         } else {
@@ -113,6 +113,15 @@ function displayMessages(conversation) {
     });
 
     messageArea.appendChild(conversationContainer);  // Append each conversation's messages
+}
+
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'medium', // Mar 2, 2025
+        timeStyle: 'short',  // 6:46 PM
+    });
+    return formatter.format(date);
 }
 
 // Send a new message
