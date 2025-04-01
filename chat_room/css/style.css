@@ -58,7 +58,7 @@ body {
 .message-area{
     height: 80vh;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
 }
 
 .msg{
