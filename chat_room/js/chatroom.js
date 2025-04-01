@@ -161,10 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Sending message to: " + url);
 
             try {
+                const requestBody = JSON.stringify({ otherUsername, chatId, message: messageText });
+                console.log("Request Body:", requestBody);
+
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ otherUsername, chatId, message: messageText })
+                    body: requestBody
                 });
 
                 if (response.ok) {
