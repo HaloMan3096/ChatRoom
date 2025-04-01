@@ -153,10 +153,6 @@ app.post('/send-message', isAuthenticated, async (req, res) => {
 
         console.log("Sending message:", userId, chatId, message);
 
-        if (users.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
         // Insert the new message into the database
         const query = `INSERT INTO Chats (cid, uid, line_text, created_at) VALUES (?, ?, ?, NOW())`;
 
