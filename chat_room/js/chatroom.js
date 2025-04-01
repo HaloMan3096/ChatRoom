@@ -83,7 +83,15 @@ async function loadChat() {
         }
 
         const conversation = await response.json();
+
         if (conversation.length > 0) {
+            // Get the other username from the first message
+            const firstMessage = conversation[0];
+            otherUsername = firstMessage.sender_name === currentUsername
+                ? firstMessage.receiver_name  // Assume a receiver_name field exists
+                : firstMessage.sender_name;
+
+            console.log("Other User:", otherUsername);
             displayMessages(conversation);
         } else {
             document.getElementById('message-area').innerHTML = "<p>No messages yet. Say hi!</p>";
