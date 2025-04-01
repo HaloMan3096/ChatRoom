@@ -114,6 +114,8 @@ function displayMessages(conversation) {
         otherUsername = firstMessage.sender_name;
     }
 
+    console.log("Other User: " + otherUsername)
+
     conversation.forEach(message => {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message-container');
