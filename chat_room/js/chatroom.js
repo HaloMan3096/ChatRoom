@@ -157,8 +157,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            const url = 'http://18.224.123.254:3000/send-message';
+            console.log("Sending message to: " + url);
+
             try {
-                const response = await fetch('http://18.224.123.254:3000/send-message', {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ otherUsername, chatId, message: messageText })
