@@ -145,28 +145,22 @@ app.get('/get-user', async (req, res) => {
 app.post('/send-message', isAuthenticated, async (req, res) => {
     try {
         const userId = req.userId;
-        const { otherUsername, chatId, message } = req.body;
+        const { chatId, message } = req.body;
 
-        if (!chatId || !message || !otherUsername) {
-            return res.status(400).json({ message: 'Missing chat ID, message, or other username' });
+        if (!chatId || !message) {
+            return res.status(400).json({ message: 'Missing chat ID, message' });
         }
 
         console.log("Sending message:", userId, chatId, message);
-
-        // Fetch the other user's ID
-        const [users] = await db.promise().query(`SELECT uid FROM User WHERE username = ?`, [otherUsername]);
 
         if (users.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const otherUserId = users[0].uid;
-        console.log("Other User ID:", otherUserId);
-
         // Insert the new message into the database
-        const query = `INSERT INTO Chats (other_uid, cid, uid, line_text, created_at) VALUES (?, ?, ?, ?, NOW())`;
+        const query = `INSERT INTO Chats (cid, uid, line_text, created_at) VALUES (?, ?, ?, NOW())`;
 
-        await db.promise().execute(query, [otherUserId, chatId, userId, message]);
+        await db.promise().execute(query, [chatId, userId, message]);
 
         res.status(200).json({ message: 'Message sent successfully' });
 

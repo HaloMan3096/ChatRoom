@@ -1,5 +1,4 @@
 let currentUsername = '';
-let otherUsername = '';
 
 function getQueryParam(param) {
     return new URLSearchParams(window.location.search).get(param);
@@ -85,13 +84,6 @@ async function loadChat() {
         const conversation = await response.json();
 
         if (conversation.length > 0) {
-            // Get the other username from the first message
-            const firstMessage = conversation[0];
-            otherUsername = firstMessage.sender_name === currentUsername
-                ? firstMessage.receiver_name  // Assume a receiver_name field exists
-                : firstMessage.sender_name;
-
-            console.log("Other User:", otherUsername);
             displayMessages(conversation);
         } else {
             document.getElementById('message-area').innerHTML = "<p>No messages yet. Say hi!</p>";
@@ -115,14 +107,6 @@ function formatTimestamp(timestamp) {
 function displayMessages(conversation) {
     const messageArea = document.getElementById('message-area');
     messageArea.innerHTML = ''; // Clear existing messages
-
-    // Get otherUsername only once (assuming all messages are between two users)
-    const firstMessage = conversation[0];
-    if (firstMessage.sender_name !== currentUsername) {
-        otherUsername = firstMessage.sender_name;
-    }
-
-    console.log("Other User: " + otherUsername)
 
     conversation.forEach(message => {
         const messageElement = document.createElement('div');
@@ -171,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Sending message to: " + url);
 
             try {
-                const requestBody = JSON.stringify({ otherUsername, chatId, message: messageText });
+                const requestBody = JSON.stringify({ chatId, message: messageText });
                 console.log("Request Body:", requestBody);
 
                 const response = await fetch(url, {
